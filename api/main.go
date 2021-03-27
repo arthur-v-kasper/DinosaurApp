@@ -2,12 +2,12 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/arthurkasper/DinosaurApp/api/handlers"
 	"github.com/arthurkasper/DinosaurApp/core/dinosaur"
 	"github.com/gorilla/mux"
 	"github.com/urfave/negroni"
@@ -22,13 +22,17 @@ func main() {
 
 	service := dinosaur.NewService(db)
 	router := mux.NewRouter()
+
+	//código que será executado a cada request, aqui podemos colocar logs, validação de cabeçalhos e etc
 	middleware := negroni.New(
 		negroni.NewLogger(),
 	)
 
-	router.Handle("/v1/dinosaur", middleware.With(
+	handlers.MakeDonisaurHandler(router, middleware, service)
+
+	/*router.Handle("/v1/dinosaur", middleware.With(
 		negroni.Wrap(hello(service)),
-	)).Methods("GET", "OPTIONS")
+	)).Methods("GET", "OPTIONS")*/
 
 	http.Handle("/", router)
 
@@ -44,18 +48,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func hello(service dinosaur.OperationService) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
-		all, _ := service.GetAll()
-		for _, i := range all {
-			fmt.Println("service: ", i)
-		}
-		/*saved, err := service.Get(1)
-		if err != nil {
-			fmt.Println("Error: ", err)
-		}
-		fmt.Println(saved)*/
-	})
 }
