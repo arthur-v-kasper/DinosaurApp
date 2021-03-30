@@ -15,7 +15,7 @@ const (
 	Jurassic   = 2
 	Cretaceous = 3
 )
-
+// INSERT INTO dinosaur (id, name, era, classification) values (1, "T-Rex", 2, 1);
 func (m Mesozoic) String() string {
 	switch m {
 	case Triassic:
