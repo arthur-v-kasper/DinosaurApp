@@ -1,4 +1,4 @@
-package handlers_test
+package handlers
 
 import (
 	"encoding/json"
@@ -59,6 +59,7 @@ func TestGellAll(t *testing.T) {
 	handler := getAllDinosaur(service)
 	r := mux.NewRouter()
 	r.Handle("/v1/dinosaur", handler)
+
 	request, err := http.NewRequest("GET", "/v1/dinosaur", nil)
 	assert.Nil(t, err)
 	request.Header.Set("Content-type", "json/application")
@@ -68,7 +69,7 @@ func TestGellAll(t *testing.T) {
 	assert.Equal(t, http.StatusOK, responseRequest.Code)
 
 	var result []*dinosaur.Dinosaur
-	err = json.NewEncoder(responseRequest).Encode(&result)
+	err = json.NewDecoder(responseRequest.Body).Decode(&result)
 	assert.Nil(t, err)
 	assert.Equal(t, 2, len(result))
 	assert.Equal(t, int64(1), result[0].ID)
