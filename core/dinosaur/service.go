@@ -109,6 +109,11 @@ func (s *Service) Update(d *Dinosaur) error {
 		return err
 	}
 
+	// if _, err := update.Exec("update dinosaur set name=?, era=?, classification=? where id=?", d.Name, d.Era, d.Classification, d.ID); err != nil {
+	// 	update.Rollback()
+	// 	return err
+	// }
+
 	update.Commit()
 	return nil
 }
