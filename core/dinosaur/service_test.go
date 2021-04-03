@@ -74,6 +74,27 @@ func TestUpdate(t *testing.T) {
 
 }
 
+func TestDelete(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("An error occurrer when opening a mock database connect: '%s'", err)
+	}
+
+	defer db.Close()
+
+	mock.ExpectBegin()
+	mock.ExpectExec("delete from dinosaur").
+		WithArgs(int64(1)).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	mockDB := NewService(db)
+
+	if err = mockDB.Remove(d.ID); err != nil {
+		t.Errorf("error was not expected while remove the dinosaur: %s", err)
+	}
+
+}
+
 func clearDB(d *sql.DB) error {
 	tx, err := d.Begin()
 	if err != nil {
