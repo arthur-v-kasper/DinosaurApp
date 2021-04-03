@@ -30,10 +30,6 @@ func main() {
 
 	handlers.MakeDonisaurHandler(router, middleware, service)
 
-	/*router.Handle("/v1/dinosaur", middleware.With(
-		negroni.Wrap(hello(service)),
-	)).Methods("GET", "OPTIONS")*/
-
 	http.Handle("/", router)
 
 	server := &http.Server{
