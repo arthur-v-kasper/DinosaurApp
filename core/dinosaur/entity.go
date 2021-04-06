@@ -59,7 +59,7 @@ const (
 // 	return "unknow"
 // }
 
-var mesozoic = map[Mesozoic]string{
+var MesozoicEras = map[Mesozoic]string{
 	Triassic:   "Triassic",
 	Jurassic:   "Jurassic",
 	Cretaceous: "Cretaceous",

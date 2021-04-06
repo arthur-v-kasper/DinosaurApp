@@ -136,3 +136,7 @@ func (s *Service) Remove(ID int64) error {
 func GetAllClassification() (map[DinosaurClassification]string, error) {
 	return DinosaurClassificationMap, nil
 }
+
+func GetAllEras() (map[Mesozoic]string, error) {
+	return MesozoicEras, nil
+}
