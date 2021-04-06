@@ -31,6 +31,10 @@ func MakeDonisaurHandler(router *mux.Router, n *negroni.Negroni, service dinosau
 		negroni.Wrap(removeDinosaur(service)),
 	)).Methods("DELETE", "OPTIONS")
 
+	router.Handle("/v1/classification", n.With(
+		negroni.Wrap(getAllDinosaurClassification()),
+	)).Methods("GET", "OPTIONS")
+
 }
 
 func getAllDinosaur(service dinosaur.OperationService) http.Handler {
@@ -142,8 +146,8 @@ func removeDinosaur(service dinosaur.OperationService) http.Handler {
 		vars := mux.Vars(r)
 		id, err := strconv.ParseInt(vars["id"], 10, 64)
 		if err != nil {
-			w.Write(formatJSONerror(err.Error()))
 			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONerror(err.Error()))
 		}
 
 		err = service.Remove(id)
@@ -154,4 +158,24 @@ func removeDinosaur(service dinosaur.OperationService) http.Handler {
 
 	})
 
+}
+
+func getAllDinosaurClassification() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-type", "application/json")
+
+		allDinosaurClassification, err := dinosaur.GetAllClassification()
+
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(formatJSONerror(err.Error()))
+		}
+
+		err = json.NewEncoder(w).Encode(allDinosaurClassification)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONerror(err.Error()))
+		}
+	})
 }

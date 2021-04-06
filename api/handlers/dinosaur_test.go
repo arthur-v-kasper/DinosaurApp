@@ -54,7 +54,7 @@ func (d DinosaurOperationServiceMock) Remove(int64) error {
 	return nil
 }
 
-func TestGellAll(t *testing.T) {
+func TestGetAll(t *testing.T) {
 	service := &DinosaurOperationServiceMock{}
 	handler := getAllDinosaur(service)
 	r := mux.NewRouter()
@@ -74,4 +74,10 @@ func TestGellAll(t *testing.T) {
 	assert.Equal(t, 2, len(result))
 	assert.Equal(t, int64(1), result[0].ID)
 	assert.Equal(t, int64(2), result[1].ID)
+}
+
+func TestGetAllClassification(t *testing.T) {
+	dc, _ := dinosaur.GetAllClassification()
+
+	assert.Equal(t, len(dc), 6)
 }
