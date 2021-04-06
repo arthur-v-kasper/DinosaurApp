@@ -6,6 +6,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/assert"
 )
 
 var d = &Dinosaur{
@@ -13,6 +14,21 @@ var d = &Dinosaur{
 	Name:           "T-Rex",
 	Era:            Jurassic,
 	Classification: Theropods,
+}
+
+func clearDB(d *sql.DB) error {
+	tx, err := d.Begin()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec("delete from dinosaur")
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }
 
 func TestCRUD(t *testing.T) {
@@ -52,6 +68,7 @@ func TestCRUD(t *testing.T) {
 	})
 }
 
+//test using mock
 func TestUpdate(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -95,17 +112,13 @@ func TestDelete(t *testing.T) {
 
 }
 
-func clearDB(d *sql.DB) error {
-	tx, err := d.Begin()
+func TestGetClassification(t *testing.T) {
+	dc, err := GetAllClassification()
 	if err != nil {
-		return err
+		t.Errorf("error was not expected: %s", err)
 	}
 
-	_, err = tx.Exec("delete from dinosaur")
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	tx.Commit()
-	return nil
+	assert.Contains(t, dc[1], "Theropods")
+	assert.Equal(t, len(dc), 6)
+
 }

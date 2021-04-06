@@ -132,3 +132,7 @@ func (s *Service) Remove(ID int64) error {
 	delete.Commit()
 	return nil
 }
+
+func GetAllClassification() (map[DinosaurClassification]string, error) {
+	return DinosaurClassificationMap, nil
+}
