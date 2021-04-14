@@ -133,10 +133,10 @@ func (s *Service) Remove(ID int64) error {
 	return nil
 }
 
-func GetAllClassification() (map[DinosaurClassification]string, error) {
+func GetAllClassification() ([]DinosaurClassification, error) {
 	return DinosaurClassificationMap, nil
 }
 
-func GetAllEras() (map[Mesozoic]string, error) {
+func GetAllEras() ([]Mesozoic, error) {
 	return MesozoicEras, nil
 }
