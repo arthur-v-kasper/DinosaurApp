@@ -118,7 +118,7 @@ func TestGetClassification(t *testing.T) {
 		t.Errorf("error was not expected: %s", err)
 	}
 
-	assert.Contains(t, dc[1], "Theropods")
-	assert.Equal(t, len(dc), 6)
+	assert.Contains(t, dc[0].Name, "Theropods")
+	assert.Equal(t, len(dc), 5)
 
 }

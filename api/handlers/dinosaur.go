@@ -35,6 +35,10 @@ func MakeDonisaurHandler(router *mux.Router, n *negroni.Negroni, service dinosau
 		negroni.Wrap(getAllDinosaurClassification()),
 	)).Methods("GET", "OPTIONS")
 
+	router.Handle("/v1/eras", n.With(
+		negroni.Wrap(getAllEras()),
+	)).Methods("GET", "OPTIONS")
+
 }
 
 func getAllDinosaur(service dinosaur.OperationService) http.Handler {
@@ -172,6 +176,26 @@ func getAllDinosaurClassification() http.Handler {
 		}
 
 		err = json.NewEncoder(w).Encode(allDinosaurClassification)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write(formatJSONerror(err.Error()))
+		}
+	})
+}
+
+func getAllEras() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-type", "application/json")
+
+		allEras, err := dinosaur.GetAllEras()
+
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write(formatJSONerror(err.Error()))
+		}
+
+		err = json.NewEncoder(w).Encode(allEras)
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
